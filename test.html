@@ -1,0 +1,86 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Datepicker - Select a Date Range</title>
+  <link rel="/Resources/CSS/Site.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://jquery.com/resources/demos/style.css">
+  <link href="Resources/CSS/Site.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  
+  $( function() {
+    var dateFormat = "mm/dd/yy",
+      StartDate = $( "#StartDate" )
+        .datepicker({
+          minDate: 0,
+          changeMonth: true,
+          changeYear: true
+        })
+        .on( "change", function() {
+          EndDate.datepicker( "option", "minDate", getDate( this ) );
+          EndDate.value=getDate( this );
+        }),
+      EndDate = $( "#EndDate" ).datepicker({
+        minDate: 0,
+        changeMonth: true,
+        changeYear: true,
+      })
+      .on( "change", function() {
+        StartDate.datepicker( "option", "maxDate", getDate( this ) );
+        StartDate.datepicker( "option", "maxDate", getDate( this ) );
+      });
+ 
+    function getDate( element ) {
+      var date;
+      try {
+        date = $.datepicker.parseDate( dateFormat, element.value );
+      } catch( error ) {
+        date = null;
+      }
+ 
+      return date;
+    }
+  } );
+  
+  	function TextInputClear(elementID,elementValue,width)
+		{
+		var element = document.getElementById(elementID);
+		if(element.value == elementValue)
+			{
+			element.value = "";
+			element.class = "fullTextInput";
+			}
+		}
+	
+	function DeferedTextInputPrep(elementID,elementValue,width)
+		{
+		setTimeout(TextInputPrep(elementID,elementValue,width),100);
+		}
+	
+	function TextInputPrep(elementID,elementValue,width)
+		{
+		var element = document.getElementById(elementID);
+		if(element.value == "")
+			{
+			element.value = elementValue;
+			element.class = "emptyTextInput";
+			}
+		}
+		
+window.onload=TextInputPrep;
+  
+  </script>
+</head>
+<body>
+ 
+
+<input type="text" id="StartDate" name="StartDate" class="fullTextInput" value="Start Date" onfocus="TextInputClear('StartDate','Start Date',150)" onfocusout="DeferedTextInputPrep('StartDate','Start Date',150)" />
+<input type="text" id="EndDate" name="EndDate" class="fullTextInput" value="End Date" onfocus="TextInputClear('EndDate','End Date',150)" onfocusout="DeferedTextInputPrep('EndDate','End Date',150)" />
+ 
+ 
+</body>
+</html>

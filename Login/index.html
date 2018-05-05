@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html style="width: 100%; height: 90%">
+
+<head>
+<title>Login</title>
+<link rel='shortcut icon' href='../Resources/Images/favicon.ico' type='image/x-icon' />
+<link rel='icon' href='../Resources/Images/favicon.ico' type='image/x-icon' />
+<script type="text/javascript">
+
+	function CheckCredentials()
+		{
+		document.getElementById("LoginBanner").innerHTML = "Verifying...";
+		var request;
+		request = new XMLHttpRequest();
+		request.onreadystatechange = function()
+			{
+			if (request.readyState == 4 && request.status == 200)
+				{
+				document.getElementById("LoginBanner").innerHTML = "Please log in to proceed.";
+				var response = request.responseText.split("&",3);
+				var greenBanner = document.getElementById("SuccessBanner");
+				var redBanner = document.getElementById("ErrorBanner");
+				switch(response[0])
+					{
+					case "-2":
+						redBanner.innerHTML = "Username cannot contain spaces.";
+						break;
+					case "-1":
+						redBanner.innerHTML = "Username cannot be longer<br />than 16 characters.";
+						break;
+					case "0":
+						redBanner.innerHTML = "";
+						greenBanner.innerHTML = "Logging in.";
+						Post("../", {token: response[1]});
+						break;
+					case "1":
+						redBanner.innerHTML = "Invalid username.";
+						break;
+					case "2":
+						redBanner.innerHTML = "You have made too many bad login attempts.<br />You may try again at "+response[1]+".<br />It is currently "+response[2]+".";
+						break;
+					case "3":
+						redBanner.innerHTML = "Incorrect password.";
+						break;
+					case "4":
+						redBanner.innerHTML = "Your account has been locked.<br />Contact your administrator or use the reset<br />button to send a password reset email.";
+						break;
+					case "5":
+						document.getElementById("Reset").style = "border-color: #C0C0C0; border-height: 20px; width: 1px; border-style: solid; border-radius: 5px; margin: 1px; height: 20px; width: 60px; background-color: #C0C0C0; display: none;";
+						document.getElementById("Password").value = "";
+						document.getElementById("Password").focus();
+						document.getElementById("Username").disabled = true;
+						document.getElementById("ConfirmPassword").style = "border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #C0C0C0;";
+						document.getElementById("ConfirmBreak").style = "";
+						redBanner.innerHTML = "Your password has expired.<br />Please create a new password to continue.";
+						break;	
+					default:
+						redBanner.innerHTML = request.responseText;
+					}
+				}
+			}
+		request.open("GET","passCheck.php?User="+document.getElementById("Username").value+"&Pass="+document.getElementById("Password").value,true);
+		request.send();
+		}
+
+function Post(path, params) 
+	{
+    var form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", path);
+    for(var key in params)
+    	{
+        if(params.hasOwnProperty(key))
+        	{
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+            form.appendChild(hiddenField);
+         	}
+    	}
+    document.body.appendChild(form);
+    form.submit();
+	}
+
+	function Validate()
+		{
+		var username = document.getElementById("Username").value;
+		var password = document.getElementById("Password").value;
+		var confirmP = document.getElementById("ConfirmPassword").value;
+		var banner = document.getElementById("ErrorBanner");
+		if(username == "" || username == "Username")
+			{
+			banner.innerHTML = "Username cannot be blank.";
+			}
+		else if(username.search(/ /) != -1)
+			{
+			banner.innerHTML = "Username cannot contain spaces.";
+			}
+		else if(password == "" || password == "Password")
+			{
+			banner.innerHTML = "Password cannot be blank.";
+			}
+		else
+			{
+			CheckCredentials();
+			}
+		}
+		
+	function UsernameClear()
+		{
+		var element = document.getElementById("Username");
+		if(element.value == "Username")
+			{
+			element.value = "";
+			element.style = "border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #000000;";
+			}
+		}
+		
+	function UsernamePrep()
+		{
+		var element = document.getElementById("Username");
+		if(element.value == "")
+			{
+			element.value = "Username";
+			element.style = "border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #C0C0C0;";
+			}
+		}
+
+	function PasswordClear(elementID,elementText)
+		{
+		var element = document.getElementById(elementID);
+		if(element.value == elementText)
+			{
+			element.value = "";
+			element.type = "password";
+			element.style = "border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #000000;";
+			}
+		}
+
+	function PasswordPrep(elementID,elementText)
+		{
+		var element = document.getElementById(elementID);
+		if(element.value == "")
+			{
+			element.value = elementText;
+			element.type = "text";
+			element.style = "border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #C0C0C0;";
+			}
+		}
+		
+	function SetPanel()
+		{
+		var newWidth = document.documentElement.clientWidth-50;
+		var newHeight = document.documentElement.clientHeight-50;
+		var newStyle = "border-radius: 15px; border-style: solid; border-height: 20px; width: thin; height: 20px; width: "+newWidth+"px; height: "+newHeight+"px; max-width: 500px; min-height: 500px; padding:15px; background-color: #FFFFFF;";
+		document.getElementById("LoginPanel").style = newStyle;
+		}
+		
+	function ResetConfirm()
+		{
+		
+		}
+
+window.onresize = SetPanel;
+
+</script>
+<meta content="en-us" http-equiv="Content-Language" />
+<style type="text/css">
+.auto-style1 {
+	text-align: center;
+}
+</style>
+</head>
+
+<body style="font-family: Arial, Helvetica, sans-serif; width: 95%; height: 100%; background-color: #000000;" onload="SetPanel()">
+	<div align="center" style="width: 100%; height: 100%">      
+	<div id="LoginPanel" class="auto-style1" style="border-radius: 15px; border-style: solid; border-height: 20px; width: thin; height: 20px; width: 100%; height: 100%; max-width: 500px; min-height: 500px; padding:15px; background-color: #FFFFFF;">
+		<span><h1>GISA Concert Master</h1></span>
+		<div align="center" style="height: 20%"></div>
+		<div>
+			<span id="LoginBanner" style="font-size: small">Please log in to proceed.</span>
+			<br />
+			<input name="Username" id="Username" type="text" value="Username" style="border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #C0C0C0;" onfocus="UsernameClear()" onfocusout="UsernamePrep()" maxlength="16" tabindex="1" />
+			<br />
+			<input name="Password" id="Password" type="text" value="Password" style="border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #C0C0C0;" onfocus="PasswordClear('Password','Password')" onfocusout="PasswordPrep('Password','Password')" tabindex="2" />
+			<br />
+			<input name="Password" id="ConfirmPassword" type="text" value="Confirm Password" style="border: 1px solid #000000; margin: 1px; border-radius: 5px; text-align: center; height: 20px; width: 150px; color: #C0C0C0; display: none;" onfocus="PasswordClear('ConfirmPassword','Confirm Password')" onfocusout="PasswordPrep('ConfirmPassword','Confirm Password')" tabindex="3" />
+			<br id="ConfirmBreak" style="display: none;" />
+			<input name="Reset" id ="Reset" style="border-color: #C0C0C0; border-height: 20px; width: 1px; border-style: solid; border-radius: 5px; margin: 1px; height: 20px; width: 60px; background-color: #C0C0C0;" type="button" value="Reset" onclick="ResetConfirm()" tabindex="4" />
+			<input name="Login" style="border-color: #C0C0C0; border-height: 20px; width: 1px; border-style: solid; border-radius: 5px; margin: 1px; height: 20px; width: 60px; background-color: #C0C0C0;" type="button" value="Log In" onclick="Validate()" tabindex="5" />
+			<br />
+			<span id="SuccessBanner" style="color: #00ff00"></span><span id="ErrorBanner" style="color: #ff0000"></span>
+		</div>
+	</div>
+</div>
+      
+</body>
+
+</html>

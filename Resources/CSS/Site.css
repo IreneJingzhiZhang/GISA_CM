@@ -1,0 +1,38 @@
+﻿.emptyTextInput,
+.emptyTextInput.hasDatepicker,
+.emptyPasswordInput
+   {
+   border: 1px solid #000000;
+   margin: 1px;
+   border-radius: 5px;
+   text-align: center;
+   height: 20px;
+   color: #C0C0C0;
+   left: 0px;
+   }
+
+.fullTextInput,
+.fullTextInput.hasDatepicker,
+.fullPasswordInput
+   {
+   border: 1px solid #000000;
+   margin: 1px;
+   border-radius: 5px;
+   text-align: center;
+   height: 20px;
+   color: #000000;
+   left: 0px;
+   }
+
+.requiredTextInput,
+.requiredTextInput.hasDatepicker,
+.requiredPasswordInput
+   {
+   border: 1px solid #FF0000;
+   margin: 1px;
+   border-radius: 5px;
+   text-align: center;
+   height: 20px;
+   color: #C0C0C0;
+   left: 0px;
+   }
